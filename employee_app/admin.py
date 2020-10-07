@@ -9,7 +9,11 @@ class EmployeeAdmin(admin.ModelAdmin):
         ('Profile info', {'fields': ['department']}),
         (None, {'fields': ['designation']}),
     ]
+
+    """ departments in list_display is the method of Employee class,
+        department in the list_filter is the field"""
     list_display = ('name', 'email','departments', 'designation')
+    list_filter = ('designation', 'department', )
 
 admin.site.register(Employee,EmployeeAdmin)
 admin.site.register(Department)
