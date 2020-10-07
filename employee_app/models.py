@@ -8,7 +8,7 @@ class Department(models.Model):
 
 
 class Designation(models.Model):
-    designationName = models.CharField(max_length=100)
+    designationName = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.designationName
@@ -16,8 +16,14 @@ class Designation(models.Model):
 class Employee(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True, blank=False)
-    department = models.ManyToManyField(Department)
-    designation = models.ForeignKey(Designation, on_delete=models.CASCADE)
+    department = models.ManyToManyField(Department, related_name='dept')
+    designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
+
+    """to use in admin.py for  displaying the departments, 
+    as it is M2M making a method here or at EmployeeAdmin will do the job"""
+    
+    def departments(self):
+        return ",".join([d.departmentName for d in self.department.all()])
