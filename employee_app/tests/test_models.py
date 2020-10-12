@@ -53,16 +53,18 @@ class TestModels:
         employee = mixer.blend('employee_app.Employee')
         assert not employee.departments()
 
-    def test_departments_returns_same_departments(self):
+    def test_departments_returns_same_count(self):
 
         d1 = mixer.blend('employee_app.Department', departmentName='HR')
         d2 = mixer.blend('employee_app.Department', departmentName='IS')
         employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        assert employee.departments() == 'HR,IS'
+        assert employee.department.count() == 2
 
-    def test_departments_returns_diffrent_departments(self):
+    def test_departments_returns_different_count(self):
 
         d1 = mixer.blend('employee_app.Department', departmentName='HR')
         d2 = mixer.blend('employee_app.Department', departmentName='IS')
         employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        assert not employee.departments() == 'HR,RP'
+        assert not employee.department.count() == 3
+
+
