@@ -17,8 +17,9 @@ class DesignationSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer(many=True)
-    designation = DesignationSerializer()
+      
+    department = serializers.SlugRelatedField(slug_field='departmentName', queryset=Department.objects.all(), many=True) 
+    designation = serializers.SlugRelatedField(slug_field='designationName', queryset=Designation.objects.all())
 
     class Meta:
         model = Employee

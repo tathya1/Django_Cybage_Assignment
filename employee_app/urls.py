@@ -8,9 +8,9 @@ router.register(r'designation', views.DesignationViewSet)
 router.register(r'employee', views.EmployeeViewSet)
 
 '''
-Url creation in backend when usig routers
-path(r'department/', ..., name='department-list'),
-path(r'department/<int:pk>/', ..., name='department-detail'
+url creation in backend when usig routers
+path(r'department/', department_list, name='department-list'),
+path(r'department/<int:pk>/', department_detail, name='department-detail'
 '''
 
 urlpatterns = [

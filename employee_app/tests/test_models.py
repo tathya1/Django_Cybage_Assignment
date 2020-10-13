@@ -64,6 +64,7 @@ class TestModels:
         d1 = mixer.blend('employee_app.Department', departmentName='HR')
         d2 = mixer.blend('employee_app.Department', departmentName='IS')
         employee = mixer.blend('employee_app.Employee', department=[d1, d2])
+        #employee.departments() returns a str of depts sepated by ','
         assert (employee.departments().count(',')+1) == 2
 
     def test_departments_returns_different_count(self):
