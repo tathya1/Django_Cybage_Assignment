@@ -8,10 +8,11 @@ import pytest
 @pytest.mark.django_db
 class TestModels:
 
+    # asserting __str__ for department
+
     def test__str__equals_departmentName(self):
 
         #mixer.blend('employee_app.Department', departmentName='HR')
-
         department = Department(departmentName='HR')
         assert str(department) == department.departmentName
 
@@ -20,10 +21,11 @@ class TestModels:
         department = Department(departmentName='HR')
         assert str(department) != 'IS'
 
+    # asserting __str__ for designation
+
     def test__str__equals_desigantionName(self):
 
         #mixer.blend('employee_app.Designation', desigantionName='SE')
-
         desigantion = Designation(designationName='SE')
         assert str(desigantion) == desigantion.designationName
 
@@ -31,6 +33,8 @@ class TestModels:
 
         desigantion = Designation(designationName='SE')
         assert str(desigantion) != 'SSE'
+
+    # asserting __str__ for employee
 
     def test__str__equals_employeeName(self):
 
@@ -41,6 +45,8 @@ class TestModels:
 
         employee = mixer.blend('employee_app.Employee', name='Tathya')
         assert str(employee) != 'Steve'
+
+    # asserting Employee.departments()
 
     def test_departments_returns_nonempty_list(self):
 
@@ -58,13 +64,11 @@ class TestModels:
         d1 = mixer.blend('employee_app.Department', departmentName='HR')
         d2 = mixer.blend('employee_app.Department', departmentName='IS')
         employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        assert employee.department.count() == 2
+        assert (employee.departments().count(',')+1) == 2
 
     def test_departments_returns_different_count(self):
 
         d1 = mixer.blend('employee_app.Department', departmentName='HR')
         d2 = mixer.blend('employee_app.Department', departmentName='IS')
         employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        assert not employee.department.count() == 3
-
-
+        assert not (employee.departments().count(',')+1) == 3
