@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from employee_app.models import Department, Designation, Employee
 from employee_app.serializers import DepartmentSerializer, DesignationSerializer, EmployeeSerializer
-from rest_framework import permissions
+#from rest_framework import permissions
 
 class DepartmentViewSet(ModelViewSet):
     queryset = Department.objects.all()
