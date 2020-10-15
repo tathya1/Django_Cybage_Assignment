@@ -4,72 +4,83 @@ import pytest
 
 # The __str__() method is called whenever you call str() on an object
 
+# creating fixtures
 
-@pytest.mark.django_db
-class TestModels:
 
-    # asserting __str__ for department
+@pytest.fixture
+def dept(db):
+    return mixer.blend('employee_app.Department', departmentName='HR')
 
-    def test__str__equals_departmentName(self):
 
-        #mixer.blend('employee_app.Department', departmentName='HR')
-        department = Department(departmentName='HR')
-        assert str(department) == department.departmentName
+@pytest.fixture
+def dept1(db):
+    return mixer.blend('employee_app.Department', departmentName='IS')
 
-    def test__str__not_equals_departmentName(self):
 
-        department = Department(departmentName='HR')
-        assert str(department) != 'IS'
+@pytest.fixture
+def des(db):
+    return mixer.blend('employee_app.Designation', desigantionName='SE')
 
-    # asserting __str__ for designation
 
-    def test__str__equals_desigantionName(self):
+@pytest.fixture
+def emp(db):
+    return mixer.blend('employee_app.Employee', name='Tathya')
 
-        #mixer.blend('employee_app.Designation', desigantionName='SE')
-        desigantion = Designation(designationName='SE')
-        assert str(desigantion) == desigantion.designationName
 
-    def test__str__not_equals_desigantionName(self):
+# asserting __str__ for department
+def test__str__equals_departmentName(dept):
 
-        desigantion = Designation(designationName='SE')
-        assert str(desigantion) != 'SSE'
+    assert str(dept) == dept.departmentName
 
-    # asserting __str__ for employee
 
-    def test__str__equals_employeeName(self):
+def test__str__not_equals_departmentName(dept):
 
-        employee = mixer.blend('employee_app.Employee', name='Tathya')
-        assert str(employee) == employee.name
+    assert str(dept) != 'IS'
 
-    def test__str__not_equals_employeeName(self):
 
-        employee = mixer.blend('employee_app.Employee', name='Tathya')
-        assert str(employee) != 'Steve'
+# asserting __str__ for designation
+def test__str__equals_desigantionName(des):
 
-    # asserting Employee.departments()
+    assert str(des) == des.designationName
 
-    def test_departments_returns_nonempty_list(self):
 
-        d = mixer.blend('employee_app.Department', departmentName='HR')
-        employee = mixer.blend('employee_app.Employee', department=[d])
-        assert employee.departments()
+def test__str__not_equals_desigantionName(des):
 
-    def test_departments_returns_empty_list(self):
+    assert str(des) != 'SSE'
 
-        employee = mixer.blend('employee_app.Employee')
-        assert not employee.departments()
 
-    def test_departments_returns_same_count(self):
+# asserting __str__ for employee
+def test__str__equals_employeeName(emp):
 
-        d1 = mixer.blend('employee_app.Department', departmentName='HR')
-        d2 = mixer.blend('employee_app.Department', departmentName='IS')
-        employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        #employee.departments() returns a str of depts sepated by ','
-        assert (employee.departments().count(',')+1) == 2
+    assert str(emp) == emp.name
 
-    def test_departments_returns_different_count(self):
 
-        d1 = mixer.blend('employee_app.Department', departmentName='HR')
-        d2 = mixer.blend('employee_app.Department', departmentName='IS')
-        employee = mixer.blend('employee_app.Employee', department=[d1, d2])
-        assert not (employee.departments().count(',')+1) == 3
+def test__str__not_equals_employeeName(emp):
+
+    assert str(emp) != 'Steve'
+
+
+# asserting Employee.departments()
+def test_departments_returns_nonempty_list(dept):
+
+    employee = mixer.blend('employee_app.Employee', department=[dept])
+    assert employee.departments()
+
+
+def test_departments_returns_empty_list(emp):
+
+    # emp fixture has no depatments given
+    assert not emp.departments()
+
+
+def test_departments_returns_same_count(dept, dept1):
+
+    employee = mixer.blend('employee_app.Employee', department=[dept, dept1])
+    # employee.departments() returns a str of depts sepated by ','
+    assert (employee.departments().count(',')+1) == 2
+
+
+def test_departments_returns_different_count(dept, dept1):
+
+    employee = mixer.blend('employee_app.Employee', department=[dept, dept1])
+    assert not (employee.departments().count(',')+1) == 3
