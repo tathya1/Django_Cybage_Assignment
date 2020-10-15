@@ -14,7 +14,32 @@ ResolverMatch(func=emploee_app.views.DepartmentViewSet, args=(), kwargs={}, url_
 
 class TestUrls:
 
+    # asserting organization_urls
+
+    def test_organization_list_url(self):
+
+        path = reverse('organization-list')
+        assert resolve(path).view_name == 'organization-list'
+
+    def test_organization_detail_url(self):
+
+        path = reverse('organization-detail', kwargs={'pk': 1})
+        assert resolve(path).view_name == 'organization-detail'
+    
+    # asserting userprofile_urls
+
+    def test_userprofile_list_url(self):
+
+        path = reverse('userprofile-list')
+        assert resolve(path).view_name == 'userprofile-list'
+
+    def test_userprofile_detail_url(self):
+
+        path = reverse('userprofile-detail', kwargs={'pk': 1})
+        assert resolve(path).view_name == 'userprofile-detail'
+
     # asserting employee_urls
+
     def test_employee_list_url(self):
 
         path = reverse('employee-list')

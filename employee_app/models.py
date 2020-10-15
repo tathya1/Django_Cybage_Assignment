@@ -1,9 +1,16 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
+
+class Organization(models.Model):
+    organizationName = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.organizationName
 
 
 class Department(models.Model):
+    organization = models.ForeignKey(
+        Organization, null=True, on_delete=models.SET_NULL)
     departmentName = models.CharField(max_length=100)
 
     def __str__(self):
@@ -17,9 +24,18 @@ class Designation(models.Model):
         return self.designationName
 
 
+class UserProfile(models.Model):
+    bio = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.bio
+
+
 class Employee(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(blank=False)
+    bio = models.OneToOneField(
+        UserProfile, null=True, on_delete=models.SET_NULL)
     department = models.ManyToManyField(Department, blank=True)
     designation = models.ForeignKey(
         Designation, null=True, on_delete=models.SET_NULL)

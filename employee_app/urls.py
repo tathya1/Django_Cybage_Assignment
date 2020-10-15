@@ -6,6 +6,8 @@ router = DefaultRouter()
 router.register(r'department', views.DepartmentViewSet)
 router.register(r'designation', views.DesignationViewSet)
 router.register(r'employee', views.EmployeeViewSet)
+router.register(r'organization', views.OrganizationViewSet)
+router.register(r'userprofile', views.UserProfileViewSet)
 
 '''
 url creation in backend when usig routers
