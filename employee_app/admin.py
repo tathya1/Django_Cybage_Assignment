@@ -1,30 +1,31 @@
 from django.contrib import admin
 from .models import Organization, Department, Designation, UserProfile, Employee
 from django_reverse_admin import ReverseModelAdmin
+from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 
-class EmployeeInline(admin.StackedInline):
+# Nested admin
+class EmployeeInline(NestedStackedInline):
     model = Employee
     extra = 1
 
 
-class DesignationAdmin(admin.ModelAdmin):
+class DesignationAdmin(NestedModelAdmin):
 
     inlines = [EmployeeInline]
 
-
-class DepartmentInline(admin.StackedInline):
+# Nested admin
+class DepartmentInline(NestedStackedInline):
     model = Department
     extra = 3
 
 
-class OrganizationAdmin(admin.ModelAdmin):
+class OrganizationAdmin(NestedModelAdmin):
 
     inlines = [DepartmentInline]
 
+
 # Reverse admin
-
-
 class EmployeeAdmin(ReverseModelAdmin):
     fieldsets = [
         ('Personal info', {'fields': ['name']}),
@@ -40,9 +41,9 @@ class EmployeeAdmin(ReverseModelAdmin):
     list_filter = ('designation', 'department', 'bio')
 
     inline_type = 'tabular'
-    inline_reverse = ['department',
-                      ('bio', {'fields': ['bio']}),
-                      ]
+    inline_reverse = [
+        ('bio', {'fields': ['bio']}),
+    ]
 
 
 admin.site.register(Organization, OrganizationAdmin)

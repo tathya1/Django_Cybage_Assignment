@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Organization(models.Model):
-    organizationName = models.CharField(max_length=100, null=True)
+    organizationName = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.organizationName

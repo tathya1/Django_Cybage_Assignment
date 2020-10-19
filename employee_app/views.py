@@ -1,32 +1,32 @@
 from rest_framework.viewsets import ModelViewSet
 from employee_app.models import Department, Designation, Employee, Organization, UserProfile
-from employee_app.serializers import DepartmentSerializer, DesignationSerializer, EmployeeSerializer, OrganizationSerializer, UserProfileSerializer
+from employee_app import serializers
 #from rest_framework import permissions
 
 
 class OrganizationViewSet(ModelViewSet):
     queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer
+    serializer_class = serializers.OrganizationSerializer
 
 
 class DepartmentViewSet(ModelViewSet):
     queryset = Department.objects.all()
-    serializer_class = DepartmentSerializer
+    serializer_class = serializers.DepartmentSerializer
     #permission_classes = [permissions.IsAuthenticated]
 
 
 class DesignationViewSet(ModelViewSet):
     queryset = Designation.objects.all()
-    serializer_class = DesignationSerializer
+    serializer_class = serializers.DesignationSerializer
     #permission_classes = [permissions.IsAuthenticated]
 
 
 class UserProfileViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = serializers.UserProfileSerializer
 
 
 class EmployeeViewSet(ModelViewSet):
     queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
+    serializer_class = serializers.EmployeeSerializer
     #permission_classes = [permissions.IsAuthenticated]

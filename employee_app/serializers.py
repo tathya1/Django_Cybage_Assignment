@@ -10,10 +10,12 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
+    organization = serializers.SlugRelatedField(
+        slug_field='organizationName', queryset=Organization.objects.all())
 
     class Meta:
         model = Department
-        fields = ['id', 'departmentName']
+        fields = ['id', 'departmentName', 'organization']
 
 
 class DesignationSerializer(serializers.ModelSerializer):

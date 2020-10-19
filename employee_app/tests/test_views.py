@@ -1,6 +1,5 @@
 from employee_app.views import DepartmentViewSet, DesignationViewSet, EmployeeViewSet
 from django.test.client import RequestFactory
-from employee_app.serializers import EmployeeSerializer
 from rest_framework.renderers import JSONRenderer
 from django.urls import reverse
 from mixer.backend.django import mixer
@@ -44,9 +43,18 @@ def des(db):
 
 
 @pytest.fixture
+def bio(db):
+    mixer.blend('employee_app.UserProfile', bio="Hey")
+
+
+@pytest.fixture
 def emp(db):
     return mixer.blend('employee_app.Employee', name="Tathya")
 
+
+@pytest.fixture
+def org(db):
+    return mixer.blend('employee_app.Organization', organizationName="Cybage")
 # testing DepartmentViewSet
 
 
@@ -61,16 +69,18 @@ def test_department_list_display_all(factory, dept):
     assert list(response.data[0].items())[1][1] == "HR"
 
 
-def test_department_list_add_one(factory, dept):
+# to do: organization is required in dept
+def test_department_list_add_one(factory, org):
 
     path = reverse('department-list')
-    data = {'departmentName': 'RP'}
+    data = {'departmentName': 'RP', 'organization': 'Cybage'}
     request = factory.post(path, data, content_type='application/json')
     response = DepartmentViewSet.as_view(actions={
         'post': 'create',
     })(request)
     assert response.status_code == 201
     assert response.data['departmentName'] == 'RP'
+    assert response.data['organization'] == 'Cybage'
 
 
 def test_department_detail_display_one(factory, dept):
@@ -151,17 +161,20 @@ def test_employee_list_display_all(factory, emp):
     assert list(response.data[0].items())[1][1] == "Tathya"
 
 
-def test_employee_list_add_one(factory, emp):
+def test_employee_list_add_one(factory, des, bio, dept):
 
     path = reverse('employee-list')
-    emp_ser = EmployeeSerializer(emp)
-    data = JSONRenderer().render(emp_ser.data)
+    data = {'name': 'Tathya', 'email': 'tathya@hotmail.com',
+            'bio': 'Hey', 'designation': 'SE', 'department': ['HR']}
+    '''emp_ser = EmployeeSerializer(emp)
+    data = JSONRenderer().render(emp_ser.data)'''
     request = factory.post(path, data, content_type='application/json')
     response = EmployeeViewSet.as_view(actions={
         'post': 'create',
     })(request)
     assert response.status_code == 201
     assert response.data['name'] == 'Tathya'
+    assert response.data['bio'] == 'Hey'
 
 
 def test_employee_detail_display_one(factory, emp):
