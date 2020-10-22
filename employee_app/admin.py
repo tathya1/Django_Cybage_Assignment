@@ -24,7 +24,7 @@ class OrganizationAdmin(NestedModelAdmin):
 
     inlines = [DepartmentInline]
 
-
+#to do: multiple dept not call-Rp logic
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
 
@@ -35,6 +35,7 @@ class DepartmentAdmin(admin.ModelAdmin):
         for emp in emps:
             emp.department.add(dept)
             emp.save()
+
 
 # Reverse admin
 
@@ -58,7 +59,6 @@ class EmployeeAdmin(ReverseModelAdmin):
     inline_reverse = [
         ('bio', {'fields': ['bio']}),
     ]
-
     # def save_model(self, request, obj, form, change):
     #     super().save_model(request, obj, form, change)
 
@@ -66,11 +66,20 @@ class EmployeeAdmin(ReverseModelAdmin):
     
     #     if not instance.department.all():
         
-    #     obj.department.add(dept)
-    #     obj.save()
+    #       obj.department.add(dept)
+    #       obj.save()
 
-
-
-admin.site.register(Organization)
+admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Designation)
+
+
+
+
+
+
+
+
+
+
+
 
