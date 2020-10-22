@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Organization(models.Model):
-    organizationName = models.CharField(max_length=100, null=True, blank=True)
+    organizationName = models.CharField(
+        max_length=100, null=False, blank=False)
 
     def __str__(self):
         return self.organizationName
@@ -36,7 +37,8 @@ class Employee(models.Model):
     email = models.EmailField(blank=False)
     bio = models.OneToOneField(
         UserProfile, null=True, on_delete=models.SET_NULL)
-    department = models.ManyToManyField(Department, blank=True)
+    department = models.ManyToManyField(
+        Department, blank=True, related_name="emp")
     designation = models.ForeignKey(
         Designation, null=True, on_delete=models.SET_NULL)
 

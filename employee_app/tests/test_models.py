@@ -96,7 +96,7 @@ def test_departments_returns_nonempty_list(dept):
 
 def test_departments_returns_empty_list(emp):
 
-    # emp fixture has no depatments given
+    # emp fixture has given no depatments 
     assert not emp.departments()
 
 

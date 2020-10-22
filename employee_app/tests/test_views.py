@@ -69,7 +69,6 @@ def test_department_list_display_all(factory, dept):
     assert list(response.data[0].items())[1][1] == "HR"
 
 
-# to do: organization is required in dept
 def test_department_list_add_one(factory, org):
 
     path = reverse('department-list')
