@@ -53,7 +53,7 @@ class EmployeeAdmin(ReverseModelAdmin):
         department in the list_filter is the field"""
 
     list_display = ('name', 'email', 'departments', 'designation', 'bio')
-    list_filter = ('designation', 'department', 'bio')
+    list_filter = ('designation', 'department')
 
     inline_type = 'tabular'
     inline_reverse = [

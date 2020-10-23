@@ -369,3 +369,119 @@ class DesignationAdminTest(TestCase):
         deletedDes = Designation.objects.filter(pk=self.des_id).first()
         self.assertEqual(deletedDes, None)
         self.assertEqual(response.status_code, 302)
+    
+
+class DepartmentAdminTest(TestCase):
+
+    department_form_post_payload = {
+        "departmentName": "TestDept",
+
+    }
+
+    def setUp(self):
+        (self.username, self.password) = _create_super_user()
+        
+        org = Organization.objects.create(organizationName='TestOrg')
+        dept = Department.objects.create(departmentName='TestDeptNew',organization=org)
+        self.dept_id = dept.id
+
+        self.department_form_post_payload['organization'] = org.pk
+
+    def test_load_department_detail_form(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        response = self.client.get(
+            reverse(
+                'admin:employee_app_department_change',
+                args=(self.dept_id,),
+            )
+        )
+        dept = Department.objects.get(id=self.dept_id)
+
+        self.assertContains(response, dept.departmentName)
+        self.assertEqual(response.status_code, 200)
+    
+
+    def test_department_add_form_valid_payload(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        response = self.client.post(
+            reverse('admin:employee_app_department_add'),
+            self.department_form_post_payload,
+        )
+
+        dept = Department.objects.get(
+            departmentName=self.department_form_post_payload["departmentName"])
+
+        self.assertEqual(dept.departmentName,
+                         self.department_form_post_payload["departmentName"])
+        self.assertEqual(response.status_code, 302)
+
+    def test_department_add_form_invalid_payload(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        department_form_post_payload = deepcopy(
+            self.department_form_post_payload)
+        department_form_post_payload['departmentName'] = ''
+
+        response = self.client.post(
+            reverse('admin:employee_app_department_add'),
+            department_form_post_payload,
+        )
+
+        self.assertContains(response, 'Please correct the error below.')
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_department_change_form(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        department_form_post_payload = deepcopy(
+            self.department_form_post_payload)
+        department_form_post_payload['departmentName'] = 'NewTestOrg'
+
+        response = self.client.post(
+            reverse(
+                'admin:employee_app_department_change',
+                args=(self.dept_id,),
+            ),
+            department_form_post_payload
+        )
+        dept = Department.objects.get(id=self.dept_id)
+
+        self.assertEqual(dept.departmentName,
+                         department_form_post_payload['departmentName'])
+        self.assertEqual(response.status_code, 302)
+
+    
+    def test_department_delete(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        are_you_sure = {"post": "yes"}
+
+        response = self.client.post(
+            reverse(
+                'admin:employee_app_department_delete',
+                args=(self.dept_id,),
+            ),
+            are_you_sure
+        )
+
+        deletedDes = Department.objects.filter(pk=self.dept_id).first()
+        self.assertEqual(deletedDes, None)
+        self.assertEqual(response.status_code, 302)
