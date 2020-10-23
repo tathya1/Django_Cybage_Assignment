@@ -255,3 +255,117 @@ class EmployeeAdminTest(TestCase):
         deletedEmp = Employee.objects.filter(pk=self.emp_id).first()
         self.assertEqual(deletedEmp, None)
         self.assertEqual(response.status_code, 302)
+    
+class DesignationAdminTest(TestCase):
+
+    designation_form_post_payload = {
+        "designationName": "TestHR"
+    }
+
+    def setUp(self):
+        (self.username, self.password) = _create_super_user()
+
+        des = Designation.objects.create(designationName='TestDes')
+        self.des_id = des.id
+
+    def test_load_designation_detail_form(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        response = self.client.get(
+            reverse(
+                'admin:employee_app_designation_change',
+                args=(self.des_id,),
+            )
+        )
+        des = Designation.objects.get(id=self.des_id)
+
+        self.assertContains(response, des.designationName)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_designation_add_form_valid_payload(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        response = self.client.post(
+            reverse('admin:employee_app_designation_add'),
+            self.designation_form_post_payload,
+        )
+
+        des = Designation.objects.get(
+            designationName=self.designation_form_post_payload["designationName"])
+
+        self.assertEqual(des.designationName,
+                         self.designation_form_post_payload["designationName"])
+        self.assertEqual(response.status_code, 302)
+
+
+
+    def test_designation_add_form_invalid_payload(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        designation_form_post_payload = deepcopy(
+            self.designation_form_post_payload)
+        designation_form_post_payload['designationName'] = ''
+
+        response = self.client.post(
+            reverse('admin:employee_app_designation_add'),
+            designation_form_post_payload,
+        )
+
+        self.assertContains(response, 'Please correct the error below.')
+        self.assertEqual(response.status_code, 200)
+
+
+
+    def test_designation_change_form(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        designation_form_post_payload = deepcopy(
+            self.designation_form_post_payload)
+        designation_form_post_payload['designationName'] = 'NewTestOrg'
+
+        response = self.client.post(
+            reverse(
+                'admin:employee_app_designation_change',
+                args=(self.des_id,),
+            ),
+            designation_form_post_payload
+        )
+        des = Designation.objects.get(id=self.des_id)
+
+        self.assertEqual(des.designationName,
+                         designation_form_post_payload['designationName'])
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_designation_delete(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+        are_you_sure = {"post": "yes"}
+
+        response = self.client.post(
+            reverse(
+                'admin:employee_app_designation_delete',
+                args=(self.des_id,),
+            ),
+            are_you_sure
+        )
+
+        deletedDes = Designation.objects.filter(pk=self.des_id).first()
+        self.assertEqual(deletedDes, None)
+        self.assertEqual(response.status_code, 302)
