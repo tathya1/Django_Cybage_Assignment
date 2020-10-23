@@ -26,15 +26,19 @@ def des(db):
 def emp(db):
     return mixer.blend('employee_app.Employee', name='Tathya')
 
+
 @pytest.fixture
 def org(db):
     return mixer.blend('employee_app.Organization', organizationName='Cybage')
+
 
 @pytest.fixture
 def bio(db):
     return mixer.blend('employee_app.UserProfile', bio='Hey')
 
 # asserting __str__ for userprofile
+
+
 def test__str__equals_bio(bio):
 
     assert str(bio) == bio.bio
@@ -45,6 +49,8 @@ def test__str__not_equals_bio(bio):
     assert str(bio) != 'Bye'
 
 # asserting __str__ for organization
+
+
 def test__str__equals_organizationName(org):
 
     assert str(org) == org.organizationName
@@ -55,6 +61,8 @@ def test__str__not_equals_organizationName(org):
     assert str(org) != 'Infy'
 
 # asserting __str__ for department
+
+
 def test__str__equals_departmentName(dept):
 
     assert str(dept) == dept.departmentName
@@ -96,7 +104,7 @@ def test_departments_returns_nonempty_list(dept):
 
 def test_departments_returns_empty_list(emp):
 
-    # emp fixture has given no depatments 
+    # emp fixture has given no depatments
     assert not emp.departments()
 
 

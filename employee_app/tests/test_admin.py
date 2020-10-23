@@ -255,7 +255,8 @@ class EmployeeAdminTest(TestCase):
         deletedEmp = Employee.objects.filter(pk=self.emp_id).first()
         self.assertEqual(deletedEmp, None)
         self.assertEqual(response.status_code, 302)
-    
+
+
 class DesignationAdminTest(TestCase):
 
     designation_form_post_payload = {
@@ -285,7 +286,6 @@ class DesignationAdminTest(TestCase):
         self.assertContains(response, des.designationName)
         self.assertEqual(response.status_code, 200)
 
-
     def test_designation_add_form_valid_payload(self):
         self.client.login(
             username=self.username,
@@ -304,8 +304,6 @@ class DesignationAdminTest(TestCase):
                          self.designation_form_post_payload["designationName"])
         self.assertEqual(response.status_code, 302)
 
-
-
     def test_designation_add_form_invalid_payload(self):
         self.client.login(
             username=self.username,
@@ -323,8 +321,6 @@ class DesignationAdminTest(TestCase):
 
         self.assertContains(response, 'Please correct the error below.')
         self.assertEqual(response.status_code, 200)
-
-
 
     def test_designation_change_form(self):
         self.client.login(
@@ -349,7 +345,6 @@ class DesignationAdminTest(TestCase):
                          designation_form_post_payload['designationName'])
         self.assertEqual(response.status_code, 302)
 
-
     def test_designation_delete(self):
         self.client.login(
             username=self.username,
@@ -369,7 +364,7 @@ class DesignationAdminTest(TestCase):
         deletedDes = Designation.objects.filter(pk=self.des_id).first()
         self.assertEqual(deletedDes, None)
         self.assertEqual(response.status_code, 302)
-    
+
 
 class DepartmentAdminTest(TestCase):
 
@@ -380,9 +375,10 @@ class DepartmentAdminTest(TestCase):
 
     def setUp(self):
         (self.username, self.password) = _create_super_user()
-        
+
         org = Organization.objects.create(organizationName='TestOrg')
-        dept = Department.objects.create(departmentName='TestDeptNew',organization=org)
+        dept = Department.objects.create(
+            departmentName='TestDeptNew', organization=org)
         self.dept_id = dept.id
 
         self.department_form_post_payload['organization'] = org.pk
@@ -403,7 +399,6 @@ class DepartmentAdminTest(TestCase):
 
         self.assertContains(response, dept.departmentName)
         self.assertEqual(response.status_code, 200)
-    
 
     def test_department_add_form_valid_payload(self):
         self.client.login(
@@ -441,7 +436,6 @@ class DepartmentAdminTest(TestCase):
         self.assertContains(response, 'Please correct the error below.')
         self.assertEqual(response.status_code, 200)
 
-
     def test_department_change_form(self):
         self.client.login(
             username=self.username,
@@ -465,7 +459,6 @@ class DepartmentAdminTest(TestCase):
                          department_form_post_payload['departmentName'])
         self.assertEqual(response.status_code, 302)
 
-    
     def test_department_delete(self):
         self.client.login(
             username=self.username,

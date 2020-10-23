@@ -25,7 +25,7 @@ class TestUrls:
 
         path = reverse('organization-detail', kwargs={'pk': 1})
         assert resolve(path).view_name == 'organization-detail'
-    
+
     # asserting userprofile_urls
 
     def test_userprofile_list_url(self):
