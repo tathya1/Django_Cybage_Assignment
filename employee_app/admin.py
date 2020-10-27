@@ -2,13 +2,12 @@ from django.contrib import admin
 from .models import Organization, Department, Designation, UserProfile, Employee
 from django_reverse_admin import ReverseModelAdmin
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
-from django.db.models.signals import pre_delete,post_save
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
+admin.site.site_header = "Employee management system"
 
 # https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#working-with-many-to-many-models
 # The through attribute is a reference to the model that manages the many-to-many relation. This model is automatically created by Django when you define a many-to-many field.
-admin.site.site_header = "Employee management system"
-
 
 class MembershipInline(NestedStackedInline):
     model = Employee.department.through
@@ -24,18 +23,23 @@ class OrganizationAdmin(NestedModelAdmin):
 
     inlines = [DepartmentInline]
 
-#to do: multiple dept not call-Rp logic
+
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
 
-    @receiver(pre_delete, sender=Department)
+    @receiver(pre_delete, sender=Department, dispatch_uid='set_default_department_on_delete')
     def pre_delete_dept(sender, instance, *args, **kwargs):
         emps = instance.emp.all()
-        dept = Department.objects.all()[0]
-        for emp in emps:
-            emp.department.add(dept)
-            emp.save()
+        if not Department.objects.filter(departmentName="RP"):
+            dept = Department.objects.create(
+                departmentName="RP", organization=instance.organization)
+        else:
+            dept = Department.objects.get(departmentName="RP")
 
+        for emp in emps:
+            if emp.department.count()==1:
+                emp.department.add(dept)
+                emp.save()
 
 # Reverse admin
 
@@ -50,7 +54,7 @@ class EmployeeAdmin(ReverseModelAdmin):
     ]
 
     """ departments in list_display is the method of Employee class,
-        department in the list_filter is the field"""
+        department in the list_filter is the field """
 
     list_display = ('name', 'email', 'departments', 'designation', 'bio')
     list_filter = ('designation', 'department')
@@ -59,27 +63,17 @@ class EmployeeAdmin(ReverseModelAdmin):
     inline_reverse = [
         ('bio', {'fields': ['bio']}),
     ]
-    # def save_model(self, request, obj, form, change):
-    #     super().save_model(request, obj, form, change)
-
-    #     dept = Department.objects.all()[0]
     
-    #     if not instance.department.all():
-        
-    #       obj.department.add(dept)
-    #       obj.save()
+    # @receiver(post_save, sender=Employee, dispatch_uid='set_default_department_on_creation')
+    # def post_save_dept(sender, instance, *args, **kwargs):
+    #     dept = Department.objects.all()[0]
+    #     c = instance.departments()
+    #     print(c)
+    #     if instance.department.count()==0:
+
+    #       instance.department.add(dept)
+    #       instance.save()
+
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Designation)
-
-
-
-
-
-
-
-
-
-
-
-

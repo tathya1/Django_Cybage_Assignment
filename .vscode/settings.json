@@ -1,3 +1,9 @@
 {
-    "python.pythonPath": "myenv/bin/python"
+    "python.pythonPath": "myenv/bin/python",
+    "python.testing.pytestArgs": [
+        "employee_app"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
 }
