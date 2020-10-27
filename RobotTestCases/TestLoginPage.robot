@@ -1,18 +1,18 @@
 ***Settings***
-Library    SeleniumLibrary
-Resource     Common.robot
+Library     SeleniumLibrary
+Resource    Common.robot
 
 **Test Cases***
 LoginTest
     Open Browser               ${AdminLoginUrl}    ${Browser}
     Maximize Browser Window
     Login
-    Sleep                2
+    Sleep                      2
     Close Browser
 
 InputBoxTest
-    ${"UserName"}                Set Variable         id:id_username
-    ${"Password"}                Set Variable         id:id_password
+    ${"UserName"}                Set Variable        id:id_username
+    ${"Password"}                Set Variable        id:id_password
     Open Browser                 ${AdminLoginUrl}    ${Browser}
     Maximize Browser Window
     Element Should Be Visible    ${"UserName"}
