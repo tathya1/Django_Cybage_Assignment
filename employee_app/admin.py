@@ -7,6 +7,8 @@ from django.dispatch import receiver
 admin.site.site_header = "Employee management system"
 
 # https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#working-with-many-to-many-models
+# https://docs.djangoproject.com/en/3.1/topics/db/models/#extra-fields-on-many-to-many-relationships
+
 # The through attribute is a reference to the model that manages the many-to-many relation. This model is automatically created by Django when you define a many-to-many field.
 
 class MembershipInline(NestedStackedInline):
@@ -63,7 +65,6 @@ class EmployeeAdmin(ReverseModelAdmin):
     inline_reverse = [
         ('bio', {'fields': ['bio']}),
     ]
-    
     # @receiver(post_save, sender=Employee, dispatch_uid='set_default_department_on_creation')
     # def post_save_dept(sender, instance, *args, **kwargs):
     #     dept = Department.objects.all()[0]
