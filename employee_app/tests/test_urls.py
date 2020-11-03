@@ -53,13 +53,13 @@ class TestUrls:
     # asserting department_urls
     def test_department_list_url(self):
 
-        path = reverse('department-list')
-        assert resolve(path).view_name == 'department-list'
+        path = reverse('organization-department-list', kwargs={'organization_pk': 1})
+        assert resolve(path).view_name == 'organization-department-list'
 
     def test_department_detail_url(self):
 
-        path = reverse('department-detail', kwargs={'pk': 1})
-        assert resolve(path).view_name == 'department-detail'
+        path = reverse('organization-department-detail', kwargs={'organization_pk': 1,'pk':1})
+        assert resolve(path).view_name == 'organization-department-detail'
 
     # asserting designation_urls
     def test_designation_list_url(self):

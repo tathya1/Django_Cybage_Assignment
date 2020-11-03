@@ -60,23 +60,23 @@ def org(db):
 
 def test_department_list_display_all(factory, dept):
 
-    path = reverse('department-list')
+    path = reverse('organization-department-list', kwargs={'organization_pk': 1})
     request = factory.get(path)
     response = DepartmentViewSet.as_view(actions={
         'get': 'list',
-    })(request)
+    })(request, organization_pk=1)
     assert response.status_code == 200
     assert list(response.data[0].items())[1][1] == "HR"
 
 
 def test_department_list_add_one(factory, org):
 
-    path = reverse('department-list')
+    path = reverse('organization-department-list', kwargs={'organization_pk': 1})
     data = {'departmentName': 'RP', 'organization': 'Cybage'}
     request = factory.post(path, data, content_type='application/json')
     response = DepartmentViewSet.as_view(actions={
         'post': 'create',
-    })(request)
+    })(request, organization_pk=1)
     assert response.status_code == 201
     assert response.data['departmentName'] == 'RP'
     assert response.data['organization'] == 'Cybage'
@@ -84,22 +84,22 @@ def test_department_list_add_one(factory, org):
 
 def test_department_detail_display_one(factory, dept):
 
-    path = reverse('department-detail', kwargs={'pk': 1})
+    path = reverse('organization-department-detail', kwargs={'organization_pk': 1, 'pk': 1})
     request = factory.get(path)
     response = DepartmentViewSet.as_view(actions={
         'get': 'retrieve',
-    })(request, pk=1)
+    })(request, organization_pk=1, pk=1)
     assert response.status_code == 200
     assert response.data['departmentName'] == 'HR'
 
 
 def test_department_detail_delete_one(factory, dept):
 
-    path = reverse('department-detail', kwargs={'pk': 1})
+    path = reverse('organization-department-detail', kwargs={'organization_pk': 1, 'pk': 1})
     request = factory.delete(path)
     response = DepartmentViewSet.as_view(actions={
         'delete': 'destroy',
-    })(request, pk=1)
+    })(request, organization_pk=1, pk=1)
     assert response.status_code == 204
 
 

@@ -10,8 +10,9 @@ class OrganizationViewSet(ModelViewSet):
 
 
 class DepartmentViewSet(ModelViewSet):
-    queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
+    def get_queryset(self):
+        return Department.objects.filter(organization = self.kwargs['organization_pk'])
     #permission_classes = [permissions.IsAuthenticated]
 
 
