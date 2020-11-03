@@ -51,3 +51,4 @@ class Employee(models.Model):
     def departments(self):
 
         return ",".join([d.departmentName for d in self.department.all()])
+

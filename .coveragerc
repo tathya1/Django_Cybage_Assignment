@@ -2,3 +2,4 @@
 omit = */tests/*
        */migrations/*
        myenv/*
+       */.vscode/extensions/*

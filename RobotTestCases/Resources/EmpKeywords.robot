@@ -16,13 +16,11 @@ Enter Employee Email
     Input Text     ${emp_email}    ${email}
 
 Select Department
-    [Arguments]                  ${drop_down_name}    ${drop_down_index_1}     ${drop_down_index_2}
-    Select From List By Index    ${drop_down_name}    ${drop_down_index_1} 
-    Select From List By Index    ${drop_down_name}    ${drop_down_index_2}
+    Select From List By Index    ${emp_dept_list_name}    ${emp_dep_list_index_one} 
+    Select From List By Index    ${emp_dept_list_name}    ${emp_dep_list_index_two}
 
 Select Designation
-    [Arguments]                  ${drop_down_name}    ${drop_down_index}
-    Select From List By Index    ${drop_down_name}    ${drop_down_index}
+    Select From List By Index    ${emp_des_drop_down_name}    ${emp_des_drop_down_index}
 
 Enter Employee Bio
     [Arguments]    ${bio}

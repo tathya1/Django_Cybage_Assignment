@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from employee_app.models import Organization, Department, Employee, Designation
+from employee_app.models import Organization, Department, Employee, Designation, UserProfile
 from copy import deepcopy
 
 
@@ -157,10 +157,15 @@ class EmployeeAdminTest(TestCase):
     def setUp(self):
         (self.username, self.password) = _create_super_user()
         des = Designation.objects.create(designationName='TestDes')
-        emp = Employee.objects.create(name='TestEmp', designation=des)
+        bio = UserProfile.objects.create(bio='TestBio')
+        org = Organization.objects.create(organizationName="TestOrg")
+        dept = Department.objects.create(departmentName="RP",organization=org)
+        emp = Employee.objects.create(name='TestEmp', designation=des, bio=bio)
+        emp.department.add(dept)
         self.emp_id = emp.id
 
         self.employee_form_post_payload['designation'] = des.pk
+        self.employee_form_post_payload['department'] = dept.pk
 
     def test_load_employee_detail_form(self):
         self.client.login(

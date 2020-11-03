@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'employee_app',
+    'employee_app.apps.EmployeeAppConfig',
     'rest_framework',
     'nested_admin',
 ]
