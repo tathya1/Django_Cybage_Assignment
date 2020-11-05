@@ -10,12 +10,13 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    organization = serializers.SlugRelatedField(
-        slug_field='organizationName', queryset=Organization.objects.all())
+
+    organizationName = serializers.ReadOnlyField(
+        source='organization.organizationName')
 
     class Meta:
         model = Department
-        fields = ['id', 'departmentName', 'organization']
+        fields = ['id', 'departmentName', 'organizationName']
 
 
 class DesignationSerializer(serializers.ModelSerializer):
@@ -41,6 +42,14 @@ class EmployeeSerializer(serializers.ModelSerializer):
     bio = serializers.SlugRelatedField(
         slug_field='bio', queryset=UserProfile.objects.all())
 
+    '''Right way to call serializer inside a serializer, l.h.s is the 
+    object on which the serailizer will get called
+
+    department = DepartmentSerializer(many=true)'''
     class Meta:
         model = Employee
-        fields = ['id', 'name', 'email', 'department', 'designation', 'bio']
+        # organization is a property defined in models.py under Employee
+        fields = ['id', 'name', 'email', 'organization',
+                  'department', 'designation', 'bio']
+
+        # read_only_fields = ('organization',)

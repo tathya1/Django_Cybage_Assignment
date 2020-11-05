@@ -22,8 +22,8 @@ def bio(db):
 
 
 @pytest.fixture
-def dept(db):
-    return Department.objects.create(departmentName='IS')
+def dept(db,org):
+    return Department.objects.create(departmentName='IS', organization=org)
 
 # Testing OrganizationSerializer
 
@@ -50,12 +50,12 @@ def test_department_serializer(org):
 
 
 def test_department_de_serializer(db, org):
-    data = {'departmentName': 'RP', 'organization': 'INFY'}
+    data = {'departmentName': 'RP', 'organizationName': 'INFY'}
     dept_ser = serializers.DepartmentSerializer(data=data)
-    # print(dept_ser.is_valid())
-    # print(dept_ser.errors)
-    dept_ser.is_valid()
-    dept_ser.save()
+    print(dept_ser.is_valid())
+    print(dept_ser.errors)
+    # dept_ser.is_valid()
+    # dept_ser.save()
     assert dept_ser.data['departmentName'] == data['departmentName']
 
 # Testing DesignationSerializer
@@ -100,12 +100,12 @@ def test_employee_serializer(org, des, bio):
     assert emp_ser.data['name'] == emp.name
 
 
-def test_employee_de_serializer(db, dept, des, bio):
-    data = {'name': 'Tathya', 'email': 'tathya@hotmail.com',
+def test_employee_de_serializer(db, dept, des, bio, org):
+    data = {'name': 'Tathya', 'email': 'tathya@hotmail.com', 'organization': ('INFY'),
             'department': ['IS'], 'designation': 'SE', 'bio': 'Hey'}
     emp_ser = serializers.EmployeeSerializer(data=data)
-    print(emp_ser.is_valid())
-    print(emp_ser.errors)
+    # print(emp_ser.is_valid())
+    # print(emp_ser.errors)
     emp_ser.is_valid()
     emp_ser.save()
     assert emp_ser.data['name'] == data['name']

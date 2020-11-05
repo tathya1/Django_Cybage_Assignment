@@ -11,8 +11,17 @@ class OrganizationViewSet(ModelViewSet):
 
 class DepartmentViewSet(ModelViewSet):
     serializer_class = serializers.DepartmentSerializer
+
     def get_queryset(self):
-        return Department.objects.filter(organization = self.kwargs['organization_pk'])
+        return Department.objects.filter(organization=self.kwargs['organization_pk'])
+
+    # https://github.com/alanjds/drf-nested-routers/issues/187
+
+    def perform_create(self, serializer):
+        org = Organization.objects.filter(
+            id=self.kwargs['organization_pk']).first()
+        serializer.save(organization=org)
+
     #permission_classes = [permissions.IsAuthenticated]
 
 

@@ -65,7 +65,7 @@ def test__str__not_equals_organizationName(org):
 
 def test__str__equals_departmentName(dept):
 
-    assert str(dept) == dept.departmentName
+    assert str(dept) == f"{dept.departmentName}_{dept.organization.organizationName}"
 
 
 def test__str__not_equals_departmentName(dept):
@@ -95,27 +95,40 @@ def test__str__not_equals_employeeName(emp):
     assert str(emp) != 'Steve'
 
 
-# asserting Employee.departments()
+# asserting Employee.departments, a property
 def test_departments_returns_nonempty_list(dept):
 
     employee = mixer.blend('employee_app.Employee', department=[dept])
-    assert employee.departments()
+    assert employee.departments
 
 
 def test_departments_returns_empty_list(emp):
 
     # emp fixture has given no depatments
-    assert not emp.departments()
+    assert not emp.departments
 
 
 def test_departments_returns_same_count(dept, dept1):
 
     employee = mixer.blend('employee_app.Employee', department=[dept, dept1])
     # employee.departments() returns a str of depts sepated by ','
-    assert (employee.departments().count(',')+1) == 2
+    assert (employee.departments.count(',')+1) == 2
 
 
 def test_departments_returns_different_count(dept, dept1):
 
     employee = mixer.blend('employee_app.Employee', department=[dept, dept1])
-    assert not (employee.departments().count(',')+1) == 3
+    assert not (employee.departments.count(',')+1) == 3
+
+
+# asserting Employee.organization, a property
+def test_organization_returns_nonempty_list(dept):
+
+    employee = mixer.blend('employee_app.Employee', department=[dept])
+    assert employee.organization
+
+
+def test_organization_returns_empty_list(emp):
+
+    # emp fixture has given no organization
+    assert not emp.organization

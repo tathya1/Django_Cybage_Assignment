@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import Organization, Department, Designation, UserProfile, Employee
 from django_reverse_admin import ReverseModelAdmin
 from nested_admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
+admin.site.site_header = "Employee management system"
+# from django.shortcuts import get_object_or_404
 
 admin.site.site_header = "Employee management system"
 
@@ -26,9 +28,14 @@ class OrganizationAdmin(NestedModelAdmin):
     inlines = [DepartmentInline]
 
 
-class NoDefaultDeptartmentAvailable(Exception):
-    def __str__(self):
-        return "Please create default department(RP) with appropriate Organization."
+# class NoDefaultDeptartmentAvailable(Exception):
+#     def __str__(self):
+#         return "Please create default department(RP) under DefaultOrg."
+
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+
+    model = Department
 
 
 @admin.register(Employee)
@@ -40,28 +47,32 @@ class EmployeeAdmin(ReverseModelAdmin):
         (None, {'fields': ['designation']}),
     ]
 
-    """ departments in list_display is the method of Employee class,
+    """ departments and organization in list_display are property of Employee class,
         department in the list_filter is the field """
 
-    list_display = ('name', 'email', 'departments', 'designation', 'bio')
-    list_filter = ('department', 'designation')
+    list_display = ('name', 'email', 'organization',
+                    'departments', 'designation', 'bio',)
+    list_filter = ('department', 'designation',)
 
     inline_type = 'tabular'
     inline_reverse = [
         ('bio', {'fields': ['bio']}),
     ]
 
-    def save_model(self, request, obj, form, change):
+    # def save_model(self, request, obj, form, change):
 
-        dept = Department.objects.filter(departmentName="RP")
-        super(EmployeeAdmin, self).save_model(request, obj, form, change)
-        if not dept:
-            raise NoDefaultDeptartmentAvailable
-        if not form.instance.department.all():
-            form.cleaned_data['department'] = dept
+    #     org = get_object_or_404(Organization, organizationName="DefaultOrg")
+    #     dept = Department.objects.filter(departmentName="RP", organization=org)
+    #     super(EmployeeAdmin, self).save_model(request, obj, form, change)
+    #     if not dept:
+    #         raise NoDefaultDeptartmentAvailable
+    #     if not form.instance.department.all():
+    #         form.cleaned_data['department'] = dept
 
 
-admin.site.register(Department)
+@admin.register(Designation)
+class DesignationAdmin(admin.ModelAdmin):
+    model = Designation
+
+
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Designation)
-

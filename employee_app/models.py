@@ -8,14 +8,17 @@ class Organization(models.Model):
     def __str__(self):
         return self.organizationName
 
+# def default_org():
+#     return Organization.objects.get_or_create(organizationName="DefaultOrg")[0].id
+
 
 class Department(models.Model):
     organization = models.ForeignKey(
-        Organization, null=True, on_delete=models.SET_NULL)
+        Organization, null=False, on_delete=models.CASCADE, related_name="dept")
     departmentName = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.departmentName
+        return f"{self.departmentName}_{self.organization.organizationName}"
 
 
 class Designation(models.Model):
@@ -38,7 +41,7 @@ class Employee(models.Model):
     bio = models.OneToOneField(
         UserProfile, null=True, on_delete=models.SET_NULL)
     department = models.ManyToManyField(
-        Department, blank=True, related_name="emp")
+        Department, blank=False, related_name="emp")
     designation = models.ForeignKey(
         Designation, null=True, on_delete=models.SET_NULL)
 
@@ -48,7 +51,12 @@ class Employee(models.Model):
     """to use in admin.py for  displaying the departments, 
     as it is M2M making a method here or at EmployeeAdmin class will do the job"""
 
+    @property
     def departments(self):
 
         return ",".join([d.departmentName for d in self.department.all()])
 
+    @property
+    def organization(self):
+
+        return ",".join(set([d.organization.organizationName for d in self.department.all()]))

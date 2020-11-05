@@ -21,16 +21,21 @@ def _create_super_user():
 class OrganizationAdminTest(TestCase):
 
     organization_form_post_payload = {
+
         "organizationName": "TestOrg",
-        "department_set-TOTAL_FORMS": 1,
-        "department_set-INITIAL_FORMS": 0,
-        "department_set-MIN_NUM_FORMS": 0,
-        "department_set-MAX_NUM_FORMS": 1000,
-        "department_set-0-departmentName": "TestDept",
-        "department_set-0-Employee_department-TOTAL_FORMS": 3,
-        "department_set-0-Employee_department-INITIAL_FORMS": 0,
-        "department_set-0-Employee_department-MIN_NUM_FORMS": 0,
-        "department_set-0-Employee_department-MAX_NUM_FORMS": 1000
+        "dept-TOTAL_FORMS": 1,
+        "dept-INITIAL_FORMS": 0,
+        "dept-MIN_NUM_FORMS": 0,
+        "dept-MAX_NUM_FORMS": 1000,
+        "dept-0-departmentName": "TestDept",
+        "dept-0-Employee_department-TOTAL_FORMS": 3,
+        "dept-0-Employee_department-INITIAL_FORMS": 0,
+        "dept-0-Employee_department-MIN_NUM_FORMS": 0,
+        "dept-0-Employee_department-MAX_NUM_FORMS": 1000,
+        "dept-empty-Employee_department-TOTAL_FORMS": 3,
+        "dept-empty-Employee_department-INITIAL_FORMS": 0,
+        "dept-empty-Employee_department-MIN_NUM_FORMS": 0,
+        "dept-empty-Employee_department-MAX_NUM_FORMS": 1000,
     }
 
     def setUp(self):
@@ -69,13 +74,12 @@ class OrganizationAdminTest(TestCase):
 
         org = Organization.objects.get(
             organizationName=self.organization_form_post_payload["organizationName"])
-        print(Department.objects.all())
         dept = Department.objects.get(organization=org)
 
         self.assertEqual(org.organizationName,
                          self.organization_form_post_payload["organizationName"])
         self.assertEqual(
-            dept.departmentName, self.organization_form_post_payload["department_set-0-departmentName"])
+            dept.departmentName, self.organization_form_post_payload["dept-0-departmentName"])
         self.assertEqual(response.status_code, 302)
 
     def test_organization_add_form_invalid_payload(self):

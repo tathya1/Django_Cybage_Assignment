@@ -60,7 +60,8 @@ def org(db):
 
 def test_department_list_display_all(factory, dept):
 
-    path = reverse('organization-department-list', kwargs={'organization_pk': 1})
+    path = reverse('organization-department-list',
+                   kwargs={'organization_pk': 1})
     request = factory.get(path)
     response = DepartmentViewSet.as_view(actions={
         'get': 'list',
@@ -71,7 +72,8 @@ def test_department_list_display_all(factory, dept):
 
 def test_department_list_add_one(factory, org):
 
-    path = reverse('organization-department-list', kwargs={'organization_pk': 1})
+    path = reverse('organization-department-list',
+                   kwargs={'organization_pk': 1})
     data = {'departmentName': 'RP', 'organization': 'Cybage'}
     request = factory.post(path, data, content_type='application/json')
     response = DepartmentViewSet.as_view(actions={
@@ -79,12 +81,13 @@ def test_department_list_add_one(factory, org):
     })(request, organization_pk=1)
     assert response.status_code == 201
     assert response.data['departmentName'] == 'RP'
-    assert response.data['organization'] == 'Cybage'
+    assert response.data['organizationName'] == 'Cybage'
 
 
 def test_department_detail_display_one(factory, dept):
 
-    path = reverse('organization-department-detail', kwargs={'organization_pk': 1, 'pk': 1})
+    path = reverse('organization-department-detail',
+                   kwargs={'organization_pk': 1, 'pk': 1})
     request = factory.get(path)
     response = DepartmentViewSet.as_view(actions={
         'get': 'retrieve',
@@ -95,7 +98,8 @@ def test_department_detail_display_one(factory, dept):
 
 def test_department_detail_delete_one(factory, dept):
 
-    path = reverse('organization-department-detail', kwargs={'organization_pk': 1, 'pk': 1})
+    path = reverse('organization-department-detail',
+                   kwargs={'organization_pk': 1, 'pk': 1})
     request = factory.delete(path)
     response = DepartmentViewSet.as_view(actions={
         'delete': 'destroy',
